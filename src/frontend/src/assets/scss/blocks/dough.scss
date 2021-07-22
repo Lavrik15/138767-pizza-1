@@ -10,20 +10,6 @@
   b {
     @include r-s16-h19;
 
-    &::before {
-      @include p_center-v;
-
-      width: 36px;
-      height: 36px;
-
-      content: "";
-      transition: 0.3s;
-
-      border-radius: 50%;
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: cover;
-    }
   }
 
   span {
@@ -55,8 +41,23 @@
   }
 
   input {
-    &:checked + b::before {
+    &:checked + b .dough__image {
       box-shadow: $shadow-large;
     }
   }
+}
+
+.dough__image {
+  @include p_center-v;
+
+  width: 36px;
+  height: 36px;
+
+  content: "";
+  transition: 0.3s;
+
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
