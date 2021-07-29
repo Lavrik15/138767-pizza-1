@@ -63,12 +63,12 @@
                   v-for="size in sizes"
                   :key="size.multiplier"
                   class="diameter__input"
-                  :class="`diameter__input--${setDiameterSize(size)}`"
+                  :class="`diameter__input--${getDiameterName(size)}`"
                 >
                   <input
                     type="radio"
                     name="diameter"
-                    :value="setDiameterSize(size)"
+                    :value="getDiameterName(size)"
                     class="visually-hidden"
                   />
                   <span>{{ size.name }}</span>
@@ -198,7 +198,7 @@ export default {
     console.log(this.sauces);
   },
   methods: {
-    setDiameterSize(data) {
+    getDiameterName(data) {
       switch (data.multiplier) {
         case data.multiplier === 1:
           return "small";
