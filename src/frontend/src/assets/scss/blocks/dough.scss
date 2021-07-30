@@ -41,7 +41,7 @@
   }
 
   input {
-    &:checked + b .dough__image {
+    &:checked + .dough__image-wrapper .dough__image {
       box-shadow: $shadow-large;
     }
   }

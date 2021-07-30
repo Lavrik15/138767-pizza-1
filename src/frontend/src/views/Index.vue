@@ -41,13 +41,13 @@
                     class="visually-hidden"
                     checked
                   />
-                  <b>
+                  <div class="dough__image-wrapper">
                     <div
                       class="dough__image"
                       :style="{ backgroundImage: `url('${item.image}')` }"
                     ></div>
-                    <span>{{ item.name }}</span>
-                  </b>
+                    <b>{{ item.name }}</b>
+                  </div>
                   <span>{{ item.description }}</span>
                 </label>
               </div>
