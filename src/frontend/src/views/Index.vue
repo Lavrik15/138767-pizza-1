@@ -86,20 +86,14 @@
               <div class="sheet__content ingridients">
                 <div class="ingridients__sauce">
                   <p>Основной соус:</p>
-
-                  <label
+                  <RadioButton
                     v-for="sauce in sauces"
                     :key="sauce.name"
-                    class="radio ingridients__input"
+                    name="sauce"
+                    :value="sauce.name"
                   >
-                    <input
-                      type="radio"
-                      name="sauce"
-                      :value="sauce.name"
-                      checked
-                    />
-                    <span>{{ sauce.name }}</span>
-                  </label>
+                    {{ sauce.name }}
+                  </RadioButton>
                 </div>
 
                 <div class="ingridients__filling">
@@ -183,9 +177,13 @@
 
 <script>
 import pizza from "@/static/pizza.json";
+import RadioButton from "@/common/components/RadioButton";
 
 export default {
   name: "Index",
+  components: {
+    RadioButton,
+  },
   data() {
     return {
       dough: pizza.dough,
