@@ -1,6 +1,12 @@
 <template>
   <label class="radio ingridients__input">
-    <input type="radio" :name="name" :value="value" :checked="checked" />
+    <input
+      type="radio"
+      :checked="isChecked"
+      :value="value"
+      @change="$emit('change', $event.target.value)"
+      :name="name"
+    />
     <span>
       <slot></slot>
     </span>
@@ -10,18 +16,24 @@
 <script>
 export default {
   name: "RadioButton",
+  model: {
+    prop: "modelValue",
+    event: "change",
+  },
   props: {
+    modelValue: { default: "" },
+    value: {
+      type: Number,
+      required: true,
+    },
     name: {
       type: String,
       required: true,
     },
-    value: {
-      type: String,
-      required: true,
-    },
-    checked: {
-      type: Boolean,
-      default: false,
+  },
+  computed: {
+    isChecked() {
+      return this.modelValue === this.value;
     },
   },
 };
