@@ -43,30 +43,30 @@ export default {
   data() {
     return {
       counter: this.count,
-      disabledIncrement: false,
-      disabledDecrement: true,
     };
+  },
+  computed: {
+    disabledIncrement() {
+      return this.counter >= this.max;
+    },
+    disabledDecrement() {
+      return this.counter <= 0;
+    },
+  },
+  watch: {
+    count() {
+      this.counter = this.count;
+    },
   },
   methods: {
     decrementHandler() {
       if (this.counter === 0) return;
-      if (this.counter <= this.max) {
-        this.disabledIncrement = false;
-      }
       this.counter -= 1;
-      if (this.counter <= 0) {
-        this.disabledDecrement = true;
-      }
       this.$emit("count", this.counter);
     },
     incrementHandler() {
       if (this.counter >= this.max) return;
-      this.disabledDecrement = false;
-
       this.counter += 1;
-      if (this.counter === this.max) {
-        this.disabledIncrement = true;
-      }
       this.$emit("count", this.counter);
     },
   },

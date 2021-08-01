@@ -9,19 +9,21 @@
       />
     </label>
 
-    <div class="content__constructor">
-      <div class="pizza" :class="foundationClass">
-        <div class="pizza__wrapper">
-          <template v-for="ingredient in ingredients">
-            <div
-              :key="ingredient.name"
-              class="pizza__filling"
-              :class="getPizzaClasses(ingredient)"
-            ></div>
-          </template>
+    <AppDrop @drop="pizzaDropHandler($event)">
+      <div class="content__constructor">
+        <div class="pizza" :class="foundationClass">
+          <div class="pizza__wrapper">
+            <template v-for="ingredient in ingredients">
+              <div
+                :key="ingredient.name"
+                class="pizza__filling"
+                :class="getPizzaClasses(ingredient)"
+              ></div>
+            </template>
+          </div>
         </div>
       </div>
-    </div>
+    </AppDrop>
 
     <div class="content__result">
       <p>Итого: {{ price }} ₽</p>
@@ -33,6 +35,7 @@
 </template>
 
 <script>
+import AppDrop from "@/common/components/AppDrop";
 import { doughType, sauceType } from "@/common/constants";
 
 export default {
@@ -54,6 +57,9 @@ export default {
       type: Array,
       default: () => [],
     },
+  },
+  components: {
+    AppDrop,
   },
   computed: {
     foundationClass() {
@@ -81,6 +87,9 @@ export default {
         "pizza__filling--second": ingredient.count === 2,
         "pizza__filling--third": ingredient.count === 3,
       };
+    },
+    pizzaDropHandler(ingredient) {
+      this.$emit("dropIngredient", ingredient);
     },
   },
 };

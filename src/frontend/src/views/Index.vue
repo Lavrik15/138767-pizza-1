@@ -17,6 +17,7 @@
         <BuilderIngredientsSelector
           :sauces="pizza.sauces"
           :ingredients="pizza.ingredients"
+          :selected="ingredients"
           @sauceTypeChange="sauce = $event"
           @ingredientChange="ingredientChangeHandler"
         ></BuilderIngredientsSelector>
@@ -26,6 +27,7 @@
           :dough="dough"
           :sauce="sauce"
           :ingredients="ingredients"
+          @dropIngredient="dropIngredientHandler"
         >
         </BuilderPizzaView>
       </div>
@@ -35,7 +37,12 @@
 
 <script>
 import pizza from "@/static/pizza.json";
-import { doughType, sauceType, pizzaSize } from "@/common/constants";
+import {
+  doughType,
+  sauceType,
+  pizzaSize,
+  ingredientsMaxLimit,
+} from "@/common/constants";
 import BuilderDoughSelector from "@/modules/builder/components/BuilderDoughSelector";
 import BuilderSizeSelector from "@/modules/builder/components/BuilderSizeSelector";
 import BuilderIngredientsSelector from "@/modules/builder/components/BuilderIngredientsSelector";
@@ -161,6 +168,21 @@ export default {
 
       // почистить массив от топигов с нулевым количеством
       this.ingredients = this.ingredients.filter((item) => item.count !== 0);
+    },
+    dropIngredientHandler(ingredient) {
+      const currentIngredient = this.ingredients.find(
+        (item) => item.ingredientType === ingredient.ingredientType
+      );
+      if (currentIngredient && currentIngredient.count >= ingredientsMaxLimit)
+        return;
+      const data = {
+        ...ingredient,
+        count:
+          currentIngredient && currentIngredient.count
+            ? currentIngredient.count + 1
+            : 1,
+      };
+      this.ingredientChangeHandler(data);
     },
   },
 };

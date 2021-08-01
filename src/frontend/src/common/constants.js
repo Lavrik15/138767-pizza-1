@@ -15,3 +15,5 @@ export const pizzaSize = {
 };
 
 export const ingredientsMaxLimit = 3;
+export const move = "move";
+export const dataPayload = "payload";

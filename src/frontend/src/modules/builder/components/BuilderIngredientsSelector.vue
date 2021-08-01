@@ -27,17 +27,20 @@
               :key="item.image"
               class="ingridients__item"
             >
-              <span class="ingridients__name">{{ item.name }}</span>
-              <div
-                class="filling"
-                :style="{ backgroundImage: `url('${item.image}')` }"
-              ></div>
-              <ItemCounter
-                class="ingridients__counter"
-                :max="ingredientsMaxLimit"
-                @count="countChangeHandler($event, item)"
-              >
-              </ItemCounter>
+              <AppDrag :transferData="item">
+                <span class="ingridients__name">{{ item.name }}</span>
+                <div
+                  class="filling"
+                  :style="{ backgroundImage: `url('${item.image}')` }"
+                ></div>
+                <ItemCounter
+                  class="ingridients__counter"
+                  :max="ingredientsMaxLimit"
+                  :count="getIngredientCount(item)"
+                  @count="countChangeHandler($event, item)"
+                >
+                </ItemCounter>
+              </AppDrag>
             </li>
           </ul>
         </div>
@@ -50,6 +53,7 @@
 import { ingredientsMaxLimit } from "@/common/constants";
 import ItemCounter from "@/common/components/ItemCounter";
 import RadioButton from "@/common/components/RadioButton";
+import AppDrag from "@/common/components/AppDrag";
 import { sauceType } from "@/common/constants";
 
 export default {
@@ -63,6 +67,11 @@ export default {
       type: Array,
       default: () => [],
     },
+    selected: {
+      type: Array,
+      default: () => [],
+      description: "Массив всех выбраных ингредиентов",
+    },
   },
   data() {
     return {
@@ -73,6 +82,7 @@ export default {
   components: {
     ItemCounter,
     RadioButton,
+    AppDrag,
   },
   methods: {
     sauceTypeHandler(sauce) {
@@ -84,6 +94,16 @@ export default {
         ...item,
         count,
       });
+    },
+    getIngredientCount(data) {
+      const ingredient = this.selected.find(
+        (item) => item.ingredientType === data.ingredientType
+      );
+      if (ingredient) {
+        return ingredient.count;
+      } else {
+        return 0;
+      }
     },
   },
 };
