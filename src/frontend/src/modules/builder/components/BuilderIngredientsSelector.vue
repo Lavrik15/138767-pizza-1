@@ -27,7 +27,7 @@
               :key="item.image"
               class="ingridients__item"
             >
-              <AppDrag :transferData="item">
+              <AppDrag :transferData="item" :isDraggable="checkDraggable(item)">
                 <span class="ingridients__name">{{ item.name }}</span>
                 <div
                   class="filling"
@@ -77,6 +77,7 @@ export default {
     return {
       ingredientsMaxLimit: ingredientsMaxLimit,
       sauceType: sauceType.creamy,
+      isDraggable: true,
     };
   },
   components: {
@@ -96,14 +97,25 @@ export default {
       });
     },
     getIngredientCount(data) {
-      const ingredient = this.selected.find(
-        (item) => item.ingredientType === data.ingredientType
-      );
+      const ingredient = this.getCurrentSelectedIngredient(data);
       if (ingredient) {
         return ingredient.count;
       } else {
         return 0;
       }
+    },
+    checkDraggable(data) {
+      const ingredient = this.getCurrentSelectedIngredient(data);
+
+      if (ingredient) {
+        return ingredient.count < ingredientsMaxLimit;
+      }
+      return true;
+    },
+    getCurrentSelectedIngredient(data) {
+      return this.selected.find(
+        (item) => item.ingredientType === data.ingredientType
+      );
     },
   },
 };
