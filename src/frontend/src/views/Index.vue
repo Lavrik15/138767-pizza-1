@@ -73,7 +73,10 @@ export default {
           ingredientsPrice += ingredient.price * ingredient.count;
         });
       }
-      return this.dough.price + this.sauce.price + ingredientsPrice;
+      return (
+        (this.dough.price + this.sauce.price + ingredientsPrice) *
+        this.size.multiplier
+      );
     },
   },
   created() {
