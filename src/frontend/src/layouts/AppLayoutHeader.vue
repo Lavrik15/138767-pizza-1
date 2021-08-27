@@ -21,8 +21,10 @@
 
 <script>
 export default {
-  name: "AppLayoutHeader",
-};
+  name: "AppLayoutHeader"
+}
 </script>
 
-<style scoped></style>
+<style scoped>
+
+</style>
