@@ -1,5 +1,6 @@
 <template>
   <div>
+    <AppLayoutHeader />
     <form action="#" method="post">
       <div class="content__wrapper">
         <h1 class="title title--big">Конструктор пиццы</h1>
@@ -47,6 +48,7 @@ import BuilderDoughSelector from "@/modules/builder/components/BuilderDoughSelec
 import BuilderSizeSelector from "@/modules/builder/components/BuilderSizeSelector";
 import BuilderIngredientsSelector from "@/modules/builder/components/BuilderIngredientsSelector";
 import BuilderPizzaView from "@/modules/builder/components/BuilderPizzaView";
+import AppLayoutHeader from "@/layouts/AppLayoutHeader";
 
 export default {
   name: "Index",
@@ -55,6 +57,7 @@ export default {
     BuilderSizeSelector,
     BuilderIngredientsSelector,
     BuilderPizzaView,
+    AppLayoutHeader,
   },
   data() {
     return {
