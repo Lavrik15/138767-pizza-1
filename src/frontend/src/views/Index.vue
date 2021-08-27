@@ -44,10 +44,10 @@ import {
   pizzaSize,
   ingredientsMaxLimit,
 } from "@/common/constants";
-import BuilderDoughSelector from "@/modules/builder/components/BuilderDoughSelector";
-import BuilderSizeSelector from "@/modules/builder/components/BuilderSizeSelector";
-import BuilderIngredientsSelector from "@/modules/builder/components/BuilderIngredientsSelector";
-import BuilderPizzaView from "@/modules/builder/components/BuilderPizzaView";
+import BuilderDoughSelector from "@/modules/cart/components/CartDoughSelector";
+import BuilderSizeSelector from "@/modules/cart/components/CartSizeSelector";
+import BuilderIngredientsSelector from "@/modules/cart/components/CartIngredientsSelector";
+import BuilderPizzaView from "@/modules/cart/components/CartPizzaView";
 import AppLayoutHeader from "@/layouts/AppLayoutHeader";
 
 export default {
