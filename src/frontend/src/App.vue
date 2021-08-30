@@ -1,16 +1,18 @@
 <template>
   <div id="app">
-    <IndexHome />
+    <AppLayoutMain>
+      <router-view />
+    </AppLayoutMain>
   </div>
 </template>
 
 <script>
-import IndexHome from "@/views/Index.vue";
+import AppLayoutMain from "@/layouts/AppLayoutMain";
 
 export default {
   name: "App",
   components: {
-    IndexHome,
+    AppLayoutMain,
   },
 };
 </script>
