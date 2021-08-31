@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Cart from "@/modules/Cart/components/Cart";
+import Cart from "@/modules/сart/components/Cart";
 
 export default {
   name: "CartView",

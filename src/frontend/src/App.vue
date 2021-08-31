@@ -1,18 +1,18 @@
 <template>
   <div id="app">
-    <AppLayoutMain>
+    <AppLayout>
       <router-view />
-    </AppLayoutMain>
+    </AppLayout>
   </div>
 </template>
 
 <script>
-import AppLayoutMain from "@/layouts/AppLayoutMain";
+import AppLayout from "@/layouts/AppLayout";
 
 export default {
   name: "App",
   components: {
-    AppLayoutMain,
+    AppLayout,
   },
 };
 </script>

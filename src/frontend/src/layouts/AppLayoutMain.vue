@@ -15,9 +15,6 @@ export default {
   components: {
     AppLayoutHeader,
   },
-  created() {
-    console.log(this.$route);
-  },
 };
 </script>
 
