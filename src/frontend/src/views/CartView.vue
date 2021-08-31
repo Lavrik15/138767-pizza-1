@@ -1,14 +1,17 @@
 <template>
   <div>
-    <h1>asdasdsdasdasdsa</h1>
+    <Cart></Cart>
   </div>
 </template>
 
 <script>
-// import CartBuilder from "@/modules/components/cart/CartBuilder";
+import Cart from "@/modules/Cart/components/Cart";
 
 export default {
-  name: "Cart",
+  name: "CartView",
+  components: {
+    Cart,
+  },
 };
 </script>
 
