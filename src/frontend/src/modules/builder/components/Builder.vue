@@ -1,62 +1,36 @@
 <template>
-  <div>
-    <form action="#" method="post">
-      <div class="content__wrapper">
-        <h1 class="title title--big">Конструктор пиццы</h1>
+  <form action="#" method="post">
+    <div class="content__wrapper">
+      <h1 class="title title--big">Конструктор пиццы</h1>
 
-        <BuilderDoughSelector
-          :dough="pizza.dough"
-          @doughTypeChange="dough = $event"
-        />
+      <BuilderDoughSelector
+        :dough="pizza.dough"
+        @doughTypeChange="dough = $event"
+      />
 
-        <BuilderSizeSelector
-          @pizzaSizeChange="size = $event"
-          :sizes="pizza.sizes"
-        />
+      <BuilderSizeSelector
+        @pizzaSizeChange="size = $event"
+        :sizes="pizza.sizes"
+      />
 
-        <BuilderIngredientsSelector
-          :sauces="pizza.sauces"
-          :ingredients="pizza.ingredients"
-          :selected="ingredients"
-          @sauceTypeChange="sauce = $event"
-          @ingredientChange="ingredientChangeHandler"
-        ></BuilderIngredientsSelector>
+      <BuilderIngredientsSelector
+        :sauces="pizza.sauces"
+        :ingredients="pizza.ingredients"
+        :selected="ingredients"
+        @sauceTypeChange="sauce = $event"
+        @ingredientChange="ingredientChangeHandler"
+      ></BuilderIngredientsSelector>
 
-        <BuilderPizzaView
-          :price="price"
-          :dough="dough"
-          :sauce="sauce"
-          :ingredients="ingredients"
-          @dropIngredient="dropIngredientHandler"
-        >
-        </BuilderPizzaView>
-      </div>
-    </form>
-    <div class="sign-form">
-      <a href="#" class="close close--white">
-        <span class="visually-hidden">Закрыть форму авторизации</span>
-      </a>
-      <div class="sign-form__title">
-        <h1 class="title title--small">Авторизуйтесь на сайте</h1>
-      </div>
-      <form action="test.html" method="post">
-        <div class="sign-form__input">
-          <label class="input">
-            <span>E-mail</span>
-            <input type="email" name="email" placeholder="example@mail.ru" />
-          </label>
-        </div>
-
-        <div class="sign-form__input">
-          <label class="input">
-            <span>Пароль</span>
-            <input type="password" name="pass" placeholder="***********" />
-          </label>
-        </div>
-        <button type="submit" class="button">Авторизоваться</button>
-      </form>
+      <BuilderPizzaView
+        :price="price"
+        :dough="dough"
+        :sauce="sauce"
+        :ingredients="ingredients"
+        @dropIngredient="dropIngredientHandler"
+      >
+      </BuilderPizzaView>
     </div>
-  </div>
+  </form>
 </template>
 
 <script>
