@@ -1,37 +1,25 @@
 <template>
   <div>
-    <header class="header">
-      <div class="header__logo">
-        <a href="index.html" class="logo">
-          <img
-            src="@/assets/img/logo.svg"
-            alt="V!U!E! Pizza logo"
-            width="90"
-            height="40"
-          />
-        </a>
-      </div>
-      <div class="header__cart">
-        <a href="cart.html">0 ₽</a>
-      </div>
-      <div class="header__user">
-        <a href="#" class="header__login"><span>Войти</span></a>
-      </div>
-    </header>
-
-    <div class="content">
-      <Index />
-    </div>
+    <component :is="layout" :title="title">
+      <slot />
+    </component>
   </div>
 </template>
 
 <script>
-import Index from "../views/Index";
+const defaultLayout = "AppLayoutDefault";
 
 export default {
   name: "AppLayout",
-  components: {
-    Index,
+  computed: {
+    layout() {
+      const layout = this.$route.meta.layout || defaultLayout;
+      console.log(layout);
+      return () => import(`@/layouts/${layout}.vue`);
+    },
+    title() {
+      return this.$route.meta.title;
+    },
   },
 };
 </script>
