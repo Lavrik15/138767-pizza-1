@@ -34,11 +34,12 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import BuilderDoughSelector from "@/modules/builder/components/BuilderDoughSelector";
 import BuilderSizeSelector from "@/modules/builder/components/BuilderSizeSelector";
 import BuilderIngredientsSelector from "@/modules/builder/components/BuilderIngredientsSelector";
 import BuilderPizzaView from "@/modules/builder/components/BuilderPizzaView";
-import pizza from "@/static/pizza.json";
+
 import {
   doughType,
   sauceType,
@@ -54,16 +55,14 @@ export default {
     BuilderIngredientsSelector,
     BuilderPizzaView,
   },
-  data() {
-    return {
-      pizza: pizza,
-      dough: {},
-      sauce: {},
-      size: {},
-      ingredients: [],
-    };
-  },
   computed: {
+    ...mapState({
+      ingredients: (state) => state.ingredients,
+      dough: (state) => state.dough,
+      sauce: (state) => state.sauce,
+      size: (state) => state.size,
+      pizza: (state) => state.pizza,
+    }),
     price() {
       let ingredientsPrice = 0;
       if (this.ingredients.length) {

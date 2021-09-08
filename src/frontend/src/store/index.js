@@ -24,7 +24,9 @@ const mutations = {
   },
   [UPDATE_ENTITY](state, { module, entity, value }) {
     if (module) {
-      const index = state[module][entity].findIndex(({ id }) => id === value.id);
+      const index = state[module][entity].findIndex(
+        ({ id }) => id === value.id
+      );
 
       if (~index) {
         state[module][entity].splice(index, 1, value);
@@ -39,9 +41,11 @@ const mutations = {
   },
   [DELETE_ENTITY](state, { module, entity, id }) {
     if (module) {
-      state[module][entity] = state[module][entity].filter(({item}) => +item.id !== +id);
+      state[module][entity] = state[module][entity].filter(
+        ({ item }) => +item.id !== +id
+      );
     } else {
-      state[entity] = state[entity].filter(({item}) => +item.id !== +id);
+      state[entity] = state[entity].filter(({ item }) => +item.id !== +id);
     }
   },
   [ADD_ENTITY](state, { module, entity, value }) {
