@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import BuilderDoughSelector from "@/modules/builder/components/BuilderDoughSelector";
 import BuilderSizeSelector from "@/modules/builder/components/BuilderSizeSelector";
 import BuilderIngredientsSelector from "@/modules/builder/components/BuilderIngredientsSelector";
@@ -77,7 +77,7 @@ export default {
     },
   },
   created() {
-    this.pizza.ingredients = this.pizza.ingredients.map((item) => {
+    const pizza = this.pizza.ingredients.map((item) => {
       const ingredient = { ...item };
       // пусть для начала будет 0 ингридиентов каждого типа
       ingredient.count = 0;
@@ -132,7 +132,10 @@ export default {
 
       return ingredient;
     });
+    this.pizzaPut(pizza);
+
     // тонкое тесто по умолчанию
+    this.doughPut(this.pizza.dough[0]);
     this.dough = this.pizza.dough[0];
     this.dough.doughType = doughType.small;
 
@@ -145,6 +148,10 @@ export default {
     this.size.pizzaSize = pizzaSize.small;
   },
   methods: {
+    ...mapActions("builder", {
+      pizzaPut: "put",
+      doughPut: "put",
+    }),
     ingredientChangeHandler(ingredient) {
       // Если еще ни один из топингов не добавлен, то создать массив и положить туда первый топинг
       if (!this.ingredients.length) {
