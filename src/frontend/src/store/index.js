@@ -6,7 +6,7 @@ import {
   UPDATE_ENTITY,
   DELETE_ENTITY,
   ADD_ENTITY,
-} from "@/store/mutatons-type";
+} from "@/store/mutations-type";
 
 Vue.use(Vuex);
 

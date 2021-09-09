@@ -56,28 +56,31 @@ export default {
     BuilderPizzaView,
   },
   computed: {
-    ...mapState({
+    ...mapState("Builder", {
       ingredients: (state) => state.ingredients,
+      ingredientsPrice: (state) => state.ingredientsPrice,
       dough: (state) => state.dough,
       sauce: (state) => state.sauce,
       size: (state) => state.size,
       pizza: (state) => state.pizza,
     }),
     price() {
-      let ingredientsPrice = 0;
       if (this.ingredients.length) {
         this.ingredients.forEach((ingredient) => {
-          ingredientsPrice += ingredient.price * ingredient.count;
+          const total =
+            this.ingredientsPrice + ingredient.price * ingredient.count;
+          this.setIngredientPrice(total);
         });
       }
       return (
-        (this.dough.price + this.sauce.price + ingredientsPrice) *
+        (this.dough.price + this.sauce.price + this.ingredientsPrice) *
         this.size.multiplier
       );
     },
   },
   created() {
-    const pizza = this.pizza.ingredients.map((item) => {
+    this.getPizza();
+    const ingredients = this.pizza.ingredients.map((item) => {
       const ingredient = { ...item };
       // пусть для начала будет 0 ингридиентов каждого типа
       ingredient.count = 0;
@@ -132,49 +135,62 @@ export default {
 
       return ingredient;
     });
-    this.pizzaPut(pizza);
+    this.setPizza({ value: ingredients, entity: "ingredients" });
 
     // тонкое тесто по умолчанию
-    this.doughPut(this.pizza.dough[0]);
-    this.dough = this.pizza.dough[0];
-    this.dough.doughType = doughType.small;
+    const dough = this.pizza.dough[0];
+    dough.doughType = doughType.small;
+    this.setDough({ value: dough, entity: "dough" });
 
     // сливочный соус по умолчанию
-    this.sauce = this.pizza.sauces[0];
-    this.sauce.sauceType = sauceType.creamy;
+    const sauce = this.pizza.sauces[0];
+    sauce.sauceType = sauceType.creamy;
+    this.setSauce({ value: sauce, entity: "sauce" });
 
     // 23 см пицца по умолчанию
-    this.size = this.pizza.sizes[0];
-    this.size.pizzaSize = pizzaSize.small;
+    const size = this.pizza.sizes[0];
+    size.pizzaSize = pizzaSize.small;
+    this.setSize({ value: size, entity: "size" });
   },
   methods: {
-    ...mapActions("builder", {
-      pizzaPut: "put",
-      doughPut: "put",
+    ...mapActions("Builder", {
+      setPizza: "set",
+      setDough: "set",
+      setSauce: "set",
+      setSize: "set",
+      addIngredient: "add",
+      setIngredient: "set",
+      setIngredientPrice: "set",
+      getPizza: "query",
     }),
     ingredientChangeHandler(ingredient) {
       // Если еще ни один из топингов не добавлен, то создать массив и положить туда первый топинг
       if (!this.ingredients.length) {
-        this.ingredients.push(ingredient);
+        this.addIngredient({ value: ingredient, entity: "ingredient" });
         return;
       }
 
       // увеличить или уменьщить кол-во у уже добавленного топинга
       let flag = false;
-      this.ingredients.forEach((item) => {
-        if (item.ingredientType === ingredient.ingredientType) {
-          item.count = ingredient.count;
+      const topings = this.ingredients;
+      topings.forEach((toping) => {
+        if (toping.ingredientType === ingredient.ingredientType) {
+          toping.count = ingredient.count;
           flag = true;
         }
       });
+      this.setIngredient({ value: topings, entity: "ingredient" });
 
       // если топинг еще не добавлялся, то добавить новый
       if (!flag) {
-        this.ingredients.push(ingredient);
+        this.addIngredient({ value: ingredient, entity: "ingredient" });
       }
 
       // почистить массив от топигов с нулевым количеством
-      this.ingredients = this.ingredients.filter((item) => item.count !== 0);
+      this.setIngredient({
+        value: topings.filter((item) => item.count !== 0),
+        entity: "ingredient",
+      });
     },
     dropIngredientHandler(ingredient) {
       const currentIngredient = this.ingredients.find(
