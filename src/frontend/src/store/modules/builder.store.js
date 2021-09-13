@@ -7,8 +7,8 @@ export default {
   namespaced: true,
   state: {
     dough: {},
-    sauce: {},
-    size: {},
+    sauces: {},
+    sizes: {},
     ingredients: [],
     ingredientsPrice: 0,
   },
@@ -21,24 +21,25 @@ export default {
     },
     getPizza({ commit }) {
       const data = pizza;
+      console.log("getPizza", data);
       commit(
         SET_ENTITY,
-        { module, entity: "dough", value: { ...data.dough } },
+        { module, entity: "dough", value: [...data.dough] },
         { root: true }
       );
       commit(
         SET_ENTITY,
-        { module, entity: "sauce", value: { ...data.sauce } },
+        { module, entity: "sauces", value: [...data.sauces] },
         { root: true }
       );
       commit(
         SET_ENTITY,
-        { module, entity: "size", value: { ...data.size } },
+        { module, entity: "sizes", value: [...data.sizes] },
         { root: true }
       );
       commit(
         SET_ENTITY,
-        { module, entity: "ingredients", value: { ...data.ingredients } },
+        { module, entity: "ingredients", value: [...data.ingredients] },
         { root: true }
       );
     },

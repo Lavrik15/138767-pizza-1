@@ -3,28 +3,22 @@
     <div class="content__wrapper">
       <h1 class="title title--big">Конструктор пиццы</h1>
 
-      <BuilderDoughSelector
-        :dough="pizza.dough"
-        @doughTypeChange="dough = $event"
-      />
+      <BuilderDoughSelector :dough="dough" @doughTypeChange="dough = $event" />
 
-      <BuilderSizeSelector
-        @pizzaSizeChange="size = $event"
-        :sizes="pizza.sizes"
-      />
+      <BuilderSizeSelector @pizzaSizeChange="size = $event" :sizes="sizes" />
 
       <BuilderIngredientsSelector
-        :sauces="pizza.sauces"
-        :ingredients="pizza.ingredients"
+        :sauces="sauces"
+        :ingredients="ingredients"
         :selected="ingredients"
-        @sauceTypeChange="sauce = $event"
+        @sauceTypeChange="sauces = $event"
         @ingredientChange="ingredientChangeHandler"
       ></BuilderIngredientsSelector>
 
       <BuilderPizzaView
         :price="price"
         :dough="dough"
-        :sauce="sauce"
+        :sauces="sauces"
         :ingredients="ingredients"
         @dropIngredient="dropIngredientHandler"
       >
@@ -60,8 +54,8 @@ export default {
       ingredients: (state) => state.ingredients,
       ingredientsPrice: (state) => state.ingredientsPrice,
       dough: (state) => state.dough,
-      sauce: (state) => state.sauce,
-      size: (state) => state.size,
+      sauces: (state) => state.sauces,
+      sizes: (state) => state.sizes,
       pizza: (state) => state.pizza,
     }),
     price() {
@@ -73,14 +67,14 @@ export default {
         });
       }
       return (
-        (this.dough.price + this.sauce.price + this.ingredientsPrice) *
-        this.size.multiplier
+        (this.dough.price + this.sauces.price + this.ingredientsPrice) *
+        this.sizes.multiplier
       );
     },
   },
   created() {
     this.getPizza();
-    const ingredients = this.pizza.ingredients.map((item) => {
+    const ingredients = this.ingredients.map((item) => {
       const ingredient = { ...item };
       // пусть для начала будет 0 ингридиентов каждого типа
       ingredient.count = 0;
@@ -138,30 +132,30 @@ export default {
     this.setPizza({ value: ingredients, entity: "ingredients" });
 
     // тонкое тесто по умолчанию
-    const dough = this.pizza.dough[0];
-    dough.doughType = doughType.small;
+    const dough = this.dough;
+    dough[0].doughType = doughType.small;
     this.setDough({ value: dough, entity: "dough" });
 
     // сливочный соус по умолчанию
-    const sauce = this.pizza.sauces[0];
-    sauce.sauceType = sauceType.creamy;
-    this.setSauce({ value: sauce, entity: "sauce" });
+    const sauces = this.sauces;
+    sauces[0].sauceType = sauceType.creamy;
+    this.setSauces({ value: sauces, entity: "sauces" });
 
     // 23 см пицца по умолчанию
-    const size = this.pizza.sizes[0];
-    size.pizzaSize = pizzaSize.small;
-    this.setSize({ value: size, entity: "size" });
+    const sizes = this.sizes;
+    sizes[0].pizzaSize = pizzaSize.small;
+    this.setSizes({ value: sizes, entity: "sizes" });
   },
   methods: {
     ...mapActions("Builder", {
       setPizza: "set",
       setDough: "set",
-      setSauce: "set",
-      setSize: "set",
+      setSauces: "set",
+      setSizes: "set",
       addIngredient: "add",
       setIngredient: "set",
       setIngredientPrice: "set",
-      getPizza: "query",
+      getPizza: "getPizza",
     }),
     ingredientChangeHandler(ingredient) {
       // Если еще ни один из топингов не добавлен, то создать массив и положить туда первый топинг
