@@ -4,17 +4,13 @@
       <h2 class="title title--small sheet__title">Выберите тесто</h2>
 
       <div class="sheet__content dough">
-        <label
-          v-for="(item, index) in dough"
-          :key="item.image"
-          class="dough__input"
-        >
+        <label v-for="item in dough" :key="item.image" class="dough__input">
           <input
             v-model="doughType"
-            :value="index"
+            :value="item.doughType"
             @change="doughTypeHandler(item)"
             type="radio"
-            name="dought"
+            name="dough"
             class="visually-hidden"
           />
           <div class="dough__image-wrapper">
@@ -49,7 +45,10 @@ export default {
   },
   methods: {
     doughTypeHandler(dough) {
-      const data = { ...dough, doughType: +this.doughType };
+      const data = {
+        ...dough,
+        doughType: +this.doughType,
+      };
       this.$emit("doughTypeChange", data);
     },
   },

@@ -40,6 +40,9 @@ import { doughType, sauceType } from "@/common/constants";
 
 export default {
   name: "BuilderPizzaView",
+  components: {
+    AppDrop,
+  },
   props: {
     price: {
       type: Number,
@@ -49,7 +52,7 @@ export default {
       type: Object,
       required: true,
     },
-    sauce: {
+    sauces: {
       type: Object,
       required: true,
     },
@@ -58,24 +61,21 @@ export default {
       default: () => [],
     },
   },
-  components: {
-    AppDrop,
-  },
   computed: {
     foundationClass() {
       return {
         "pizza--foundation--big-creamy":
           this.dough.doughType === doughType.big &&
-          this.sauce.sauceType === sauceType.creamy,
+          this.sauces.sauceType === sauceType.creamy,
         "pizza--foundation--big-tomato":
           this.dough.doughType === doughType.big &&
-          this.sauce.sauceType === sauceType.tomato,
+          this.sauces.sauceType === sauceType.tomato,
         "pizza--foundation--small-creamy":
           this.dough.doughType === doughType.small &&
-          this.sauce.sauceType === sauceType.creamy,
+          this.sauces.sauceType === sauceType.creamy,
         "pizza--foundation--small-tomato":
           this.dough.doughType === doughType.small &&
-          this.sauce.sauceType === sauceType.tomato,
+          this.sauces.sauceType === sauceType.tomato,
       };
     },
   },

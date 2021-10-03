@@ -50,11 +50,10 @@
 </template>
 
 <script>
-import { ingredientsMaxLimit } from "@/common/constants";
+import { sauceType, ingredientsMaxLimit } from "@/common/constants";
 import ItemCounter from "@/common/components/ItemCounter";
 import RadioButton from "@/common/components/RadioButton";
 import AppDrag from "@/common/components/AppDrag";
-import { sauceType } from "@/common/constants";
 
 export default {
   name: "BuilderIngredientsSelector",
@@ -76,7 +75,7 @@ export default {
   data() {
     return {
       ingredientsMaxLimit: ingredientsMaxLimit,
-      sauceType: sauceType.creamy,
+      sauceType: sauceType.tomato,
       isDraggable: true,
     };
   },

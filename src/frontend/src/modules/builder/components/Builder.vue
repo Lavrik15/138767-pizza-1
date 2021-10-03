@@ -3,23 +3,29 @@
     <div class="content__wrapper">
       <h1 class="title title--big">Конструктор пиццы</h1>
 
-      <BuilderDoughSelector :dough="dough" @doughTypeChange="dough = $event" />
+      <BuilderDoughSelector
+        :dough="pizza.dough"
+        @doughTypeChange="doughTypeChange"
+      />
 
-      <BuilderSizeSelector @pizzaSizeChange="size = $event" :sizes="sizes" />
+      <BuilderSizeSelector
+        :sizes="pizza.sizes"
+        @pizzaSizeChange="pizzaSizeChange"
+      />
 
       <BuilderIngredientsSelector
-        :sauces="sauces"
-        :ingredients="ingredients"
-        :selected="ingredients"
-        @sauceTypeChange="sauces = $event"
+        :sauces="pizza.sauces"
+        :ingredients="pizza.ingredients"
+        :selected="form.ingredients"
+        @sauceTypeChange="sauceTypeChange"
         @ingredientChange="ingredientChangeHandler"
       ></BuilderIngredientsSelector>
 
       <BuilderPizzaView
         :price="price"
-        :dough="dough"
-        :sauces="sauces"
-        :ingredients="ingredients"
+        :dough="form.dough"
+        :sauces="form.sauces"
+        :ingredients="form.ingredients"
         @dropIngredient="dropIngredientHandler"
       >
       </BuilderPizzaView>
@@ -51,30 +57,32 @@ export default {
   },
   computed: {
     ...mapState("Builder", {
-      ingredients: (state) => state.ingredients,
-      ingredientsPrice: (state) => state.ingredientsPrice,
-      dough: (state) => state.dough,
-      sauces: (state) => state.sauces,
-      sizes: (state) => state.sizes,
       pizza: (state) => state.pizza,
+      form: (state) => state.form,
+      ingredientsPrice: (state) => state.ingredientsPrice,
     }),
     price() {
-      if (this.ingredients.length) {
-        this.ingredients.forEach((ingredient) => {
-          const total =
-            this.ingredientsPrice + ingredient.price * ingredient.count;
-          this.setIngredientPrice(total);
+      if (this.form.ingredients.length) {
+        let total = 0;
+        this.form.ingredients.forEach((ingredient) => {
+          total = total + ingredient.price * ingredient.count;
+
+          this.setIngredientsPrice(total);
         });
+      } else {
+        this.setIngredientsPrice(0);
       }
       return (
-        (this.dough.price + this.sauces.price + this.ingredientsPrice) *
-        this.sizes.multiplier
+        (this.form.dough.price +
+          this.form.sauces.price +
+          this.ingredientsPrice) *
+        this.form.sizes.multiplier
       );
     },
   },
   created() {
     this.getPizza();
-    const ingredients = this.ingredients.map((item) => {
+    const ingredients = this.pizza.ingredients.map((item) => {
       const ingredient = { ...item };
       // пусть для начала будет 0 ингридиентов каждого типа
       ingredient.count = 0;
@@ -129,65 +137,85 @@ export default {
 
       return ingredient;
     });
-    this.setPizza({ value: ingredients, entity: "ingredients" });
+    this.setIngredients(ingredients);
 
-    // тонкое тесто по умолчанию
-    const dough = this.dough;
+    const dough = this.pizza.dough;
     dough[0].doughType = doughType.small;
-    this.setDough({ value: dough, entity: "dough" });
+    dough[1].doughType = doughType.big;
+    this.setDough(dough);
+    this.setFormDough(dough[0]);
 
-    // сливочный соус по умолчанию
-    const sauces = this.sauces;
-    sauces[0].sauceType = sauceType.creamy;
-    this.setSauces({ value: sauces, entity: "sauces" });
+    const sauces = this.pizza.sauces;
+    sauces[0].sauceType = sauceType.tomato;
+    sauces[1].sauceType = sauceType.creamy;
+    this.setSauces(sauces);
+    this.setFormSauces(sauces[0]);
 
-    // 23 см пицца по умолчанию
-    const sizes = this.sizes;
-    sizes[0].pizzaSize = pizzaSize.small;
-    this.setSizes({ value: sizes, entity: "sizes" });
+    const sizes = this.pizza.sizes.map((size) => {
+      switch (size.multiplier) {
+        case 1:
+          return {
+            ...size,
+            pizzaSize: pizzaSize.small,
+          };
+        case 2:
+          return {
+            ...size,
+            pizzaSize: pizzaSize.normal,
+          };
+        case 3:
+          return {
+            ...size,
+            pizzaSize: pizzaSize.big,
+          };
+      }
+    });
+    this.setSizes(sizes);
+    this.setFormSizes(sizes[1]);
   },
   methods: {
-    ...mapActions("Builder", {
-      setPizza: "set",
-      setDough: "set",
-      setSauces: "set",
-      setSizes: "set",
-      addIngredient: "add",
-      setIngredient: "set",
-      setIngredientPrice: "set",
-      getPizza: "getPizza",
-    }),
+    ...mapActions("Builder", [
+      "setFormDough",
+      "setFormSizes",
+      "setFormSauces",
+      "addFormIngredients",
+      "updateCountFormIngredients",
+      "setFormIngredients",
+      "setDough",
+      "setSizes",
+      "setSauces",
+      "setIngredients",
+      "setIngredientsPrice",
+      "getPizza",
+    ]),
+    doughTypeChange(selectedDough) {
+      this.setFormDough(selectedDough);
+    },
+    pizzaSizeChange(sizeSelected) {
+      this.setFormSizes(sizeSelected);
+    },
+    sauceTypeChange(sauceSelected) {
+      this.setFormSauces(sauceSelected);
+    },
     ingredientChangeHandler(ingredient) {
       // Если еще ни один из топингов не добавлен, то создать массив и положить туда первый топинг
-      if (!this.ingredients.length) {
-        this.addIngredient({ value: ingredient, entity: "ingredient" });
-        return;
-      }
+      const isExist = this.form.ingredients.some(
+        (item) => item.ingredientType === ingredient.ingredientType
+      );
 
-      // увеличить или уменьщить кол-во у уже добавленного топинга
-      let flag = false;
-      const topings = this.ingredients;
-      topings.forEach((toping) => {
-        if (toping.ingredientType === ingredient.ingredientType) {
-          toping.count = ingredient.count;
-          flag = true;
-        }
-      });
-      this.setIngredient({ value: topings, entity: "ingredient" });
-
-      // если топинг еще не добавлялся, то добавить новый
-      if (!flag) {
-        this.addIngredient({ value: ingredient, entity: "ingredient" });
+      if (isExist) {
+        this.updateCountFormIngredients(ingredient);
+      } else {
+        this.addFormIngredients(ingredient);
       }
 
       // почистить массив от топигов с нулевым количеством
-      this.setIngredient({
-        value: topings.filter((item) => item.count !== 0),
-        entity: "ingredient",
-      });
+      this.setFormIngredients(
+        this.form.ingredients.filter((item) => item.count !== 0)
+      );
     },
     dropIngredientHandler(ingredient) {
-      const currentIngredient = this.ingredients.find(
+      const currentIngredient = this.form.ingredients.find(
         (item) => item.ingredientType === ingredient.ingredientType
       );
       if (currentIngredient && currentIngredient.count >= ingredientsMaxLimit)
