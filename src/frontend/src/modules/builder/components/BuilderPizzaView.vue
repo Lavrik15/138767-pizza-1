@@ -3,6 +3,8 @@
     <label class="input">
       <span class="visually-hidden">Название пиццы</span>
       <input
+        v-model="pizzaName"
+        @input="pizzaNameInputHandler"
         type="text"
         name="pizza_name"
         placeholder="Введите название пиццы"
@@ -27,7 +29,11 @@
 
     <div class="content__result">
       <p>Итого: {{ price }} ₽</p>
-      <button type="button" class="button button--disabled" disabled>
+      <button
+        type="button"
+        class="button"
+        :class="{ 'button--disabled': isReadyBtnDisabled }"
+      >
         Готовьте!
       </button>
     </div>
@@ -60,6 +66,15 @@ export default {
       type: Array,
       default: () => [],
     },
+    isReadyBtnDisabled: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  data() {
+    return {
+      pizzaName: "",
+    };
   },
   computed: {
     foundationClass() {
@@ -80,6 +95,9 @@ export default {
     },
   },
   methods: {
+    pizzaNameInputHandler(event) {
+      this.$emit("pizzaNameInput", event.target.value);
+    },
     getPizzaClasses(ingredient) {
       return {
         ["pizza__filling--" + ingredient.ingredientType]:

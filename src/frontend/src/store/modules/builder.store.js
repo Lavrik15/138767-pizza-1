@@ -8,6 +8,7 @@ import {
   SET_FORM_SIZES,
   SET_FORM_SAUCES,
   SET_INGREDIENTS_PRICE,
+  SET_FORM_PIZZA_NAME,
 } from "@/store/mutations-type";
 
 export default {
@@ -20,6 +21,7 @@ export default {
       sauces: {},
       sizes: {},
       ingredients: [],
+      name: "",
     }, // все выбарнные лементы конструктора
   },
   mutations: {
@@ -46,6 +48,9 @@ export default {
     },
     [SET_INGREDIENTS_PRICE](state, data) {
       state.ingredientsPrice = data;
+    },
+    [SET_FORM_PIZZA_NAME](state, data) {
+      state.form.name = data;
     },
   },
   actions: {
@@ -100,6 +105,9 @@ export default {
     },
     setSauces({ commit }, data) {
       commit(SET_PIZZA, { entity: "sauces", data });
+    },
+    setFormPizzaName({ commit }, data) {
+      commit(SET_FORM_PIZZA_NAME, data);
     },
   },
 };

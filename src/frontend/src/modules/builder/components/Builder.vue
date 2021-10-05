@@ -26,7 +26,9 @@
         :dough="form.dough"
         :sauces="form.sauces"
         :ingredients="form.ingredients"
+        :isReadyBtnDisabled="isReadyBtnDisabled"
         @dropIngredient="dropIngredientHandler"
+        @pizzaNameInput="pizzaNameInputHandler"
       >
       </BuilderPizzaView>
     </div>
@@ -78,6 +80,12 @@ export default {
           this.ingredientsPrice) *
         this.form.sizes.multiplier
       );
+    },
+    isReadyBtnDisabled() {
+      const isIngredientsExist = !!Object.values(this.form.ingredients).length;
+      const isPizzaNameExist = this.form.name.trim() !== "";
+      const valid = [isIngredientsExist, isPizzaNameExist];
+      return !valid.every((field) => field);
     },
   },
   created() {
@@ -187,6 +195,7 @@ export default {
       "setIngredients",
       "setIngredientsPrice",
       "getPizza",
+      "setFormPizzaName",
     ]),
     doughTypeChange(selectedDough) {
       this.setFormDough(selectedDough);
@@ -228,6 +237,9 @@ export default {
             : 1,
       };
       this.ingredientChangeHandler(data);
+    },
+    pizzaNameInputHandler(name) {
+      this.setFormPizzaName(name);
     },
   },
 };
