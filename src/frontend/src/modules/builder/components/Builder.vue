@@ -27,8 +27,10 @@
         :sauces="form.sauces"
         :ingredients="form.ingredients"
         :isReadyBtnDisabled="isReadyBtnDisabled"
+        :pizzaName="form.name"
         @dropIngredient="dropIngredientHandler"
         @pizzaNameInput="pizzaNameInputHandler"
+        @readyBtnClick="onReadyBtnClick"
       >
       </BuilderPizzaView>
     </div>
@@ -37,6 +39,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import { createUUIDv4 } from "@/common/helpers";
 import BuilderDoughSelector from "@/modules/builder/components/BuilderDoughSelector";
 import BuilderSizeSelector from "@/modules/builder/components/BuilderSizeSelector";
 import BuilderIngredientsSelector from "@/modules/builder/components/BuilderIngredientsSelector";
@@ -61,7 +64,7 @@ export default {
     ...mapState("Builder", {
       pizza: (state) => state.pizza,
       form: (state) => state.form,
-      ingredientsPrice: (state) => state.ingredientsPrice,
+      ingredientsPrice: (state) => state.form.ingredientsPrice,
     }),
     price() {
       if (this.form.ingredients.length) {
@@ -74,12 +77,14 @@ export default {
       } else {
         this.setIngredientsPrice(0);
       }
-      return (
+      const price =
         (this.form.dough.price +
           this.form.sauces.price +
-          this.ingredientsPrice) *
-        this.form.sizes.multiplier
-      );
+          this.form.ingredientsPrice) *
+        this.form.sizes.multiplier;
+
+      this.setFormPrice(price);
+      return price;
     },
     isReadyBtnDisabled() {
       const isIngredientsExist = !!Object.values(this.form.ingredients).length;
@@ -196,7 +201,11 @@ export default {
       "setIngredientsPrice",
       "getPizza",
       "setFormPizzaName",
+      "setFormPrice",
+      "setPizzaId",
+      "updateCartGoods",
     ]),
+    ...mapActions("Cart", ["addGoodsToCart", "updateCartGoods"]),
     doughTypeChange(selectedDough) {
       this.setFormDough(selectedDough);
     },
@@ -240,6 +249,16 @@ export default {
     },
     pizzaNameInputHandler(name) {
       this.setFormPizzaName(name);
+    },
+    onReadyBtnClick() {
+      if (this.form.id) {
+        this.updateCartGoods(this.form);
+        this.$router.push("/cart");
+        return;
+      }
+      this.addGoodsToCart(this.form);
+      this.setPizzaId(createUUIDv4());
+      this.$router.push("/cart");
     },
   },
 };

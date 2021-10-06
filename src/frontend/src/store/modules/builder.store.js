@@ -9,20 +9,28 @@ import {
   SET_FORM_SAUCES,
   SET_INGREDIENTS_PRICE,
   SET_FORM_PIZZA_NAME,
+  SET_FORM_PRICE,
+  SET_PIZZA_ID,
+  UPDATE_FORM_PIZZA,
+  RESET_FORM_PIZZA,
 } from "@/store/mutations-type";
+
+const initForm = () => ({
+  dough: {},
+  sauces: {},
+  sizes: {},
+  ingredients: [],
+  name: "",
+  ingredientsPrice: 0,
+  count: 1,
+  id: null,
+});
 
 export default {
   namespaced: true,
   state: {
     pizza: {},
-    ingredientsPrice: 0,
-    form: {
-      dough: {},
-      sauces: {},
-      sizes: {},
-      ingredients: [],
-      name: "",
-    }, // все выбарнные лементы конструктора
+    form: initForm(),
   },
   mutations: {
     [SET_PIZZA](state, { entity, data }) {
@@ -47,10 +55,22 @@ export default {
       state.form.sauces = data;
     },
     [SET_INGREDIENTS_PRICE](state, data) {
-      state.ingredientsPrice = data;
+      state.form.ingredientsPrice = data;
     },
     [SET_FORM_PIZZA_NAME](state, data) {
       state.form.name = data;
+    },
+    [SET_FORM_PRICE](state, data) {
+      state.form.price = data;
+    },
+    [SET_PIZZA_ID](state, data) {
+      state.form.id = data;
+    },
+    [UPDATE_FORM_PIZZA](state, data) {
+      state.form = data;
+    },
+    [RESET_FORM_PIZZA](state, data) {
+      state.form = data;
     },
   },
   actions: {
@@ -108,6 +128,18 @@ export default {
     },
     setFormPizzaName({ commit }, data) {
       commit(SET_FORM_PIZZA_NAME, data);
+    },
+    setFormPrice({ commit }, data) {
+      commit(SET_FORM_PRICE, data);
+    },
+    setPizzaId({ commit }, data) {
+      commit(SET_PIZZA_ID, data);
+    },
+    updateFormPizza({ commit }, data) {
+      commit(UPDATE_FORM_PIZZA, data);
+    },
+    resetFormPizza({ commit }) {
+      commit(RESET_FORM_PIZZA, initForm());
     },
   },
 };
