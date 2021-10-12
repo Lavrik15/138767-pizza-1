@@ -111,9 +111,9 @@ export default {
         return item;
       });
     },
-    [UPDATE_CART_GOODS](state, order) {
+    [UPDATE_CART_GOODS](state) {
       state.cart = state.cart.map((item) => {
-        if (item.id === order.id) return order;
+        if (item.id === state.form.id) return state.form;
 
         return item;
       });

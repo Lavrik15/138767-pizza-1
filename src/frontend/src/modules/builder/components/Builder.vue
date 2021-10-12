@@ -183,12 +183,10 @@ export default {
       "setSizes",
       "setSauces",
       "setIngredients",
-      "setIngredientsPrice",
       "getPizza",
       "setFormPizzaName",
       "setFormPrice",
       "setPizzaId",
-      "updateCartGoods",
     ]),
     ...mapActions("Cart", ["addGoodsToCart", "updateCartGoods"]),
     doughTypeChange(selectedDough) {
@@ -237,7 +235,7 @@ export default {
     },
     onReadyBtnClick() {
       if (this.form.id) {
-        this.updateCartGoods(this.form);
+        this.updateCartGoods();
         this.$router.push("/cart");
         return;
       }
