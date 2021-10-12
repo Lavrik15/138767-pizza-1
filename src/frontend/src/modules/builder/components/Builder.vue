@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapGetters } from "vuex";
 import { createUUIDv4 } from "@/common/helpers";
 import BuilderDoughSelector from "@/modules/builder/components/BuilderDoughSelector";
 import BuilderSizeSelector from "@/modules/builder/components/BuilderSizeSelector";
@@ -64,33 +64,18 @@ export default {
     ...mapState("Builder", {
       pizza: (state) => state.pizza,
       form: (state) => state.form,
-      ingredientsPrice: (state) => state.form.ingredientsPrice,
     }),
-    price() {
-      if (this.form.ingredients.length) {
-        let total = 0;
-        this.form.ingredients.forEach((ingredient) => {
-          total = total + ingredient.price * ingredient.count;
-
-          this.setIngredientsPrice(total);
-        });
-      } else {
-        this.setIngredientsPrice(0);
-      }
-      const price =
-        (this.form.dough.price +
-          this.form.sauces.price +
-          this.form.ingredientsPrice) *
-        this.form.sizes.multiplier;
-
-      this.setFormPrice(price);
-      return price;
-    },
+    ...mapGetters("Builder", ["price"]),
     isReadyBtnDisabled() {
       const isIngredientsExist = !!Object.values(this.form.ingredients).length;
       const isPizzaNameExist = this.form.name.trim() !== "";
       const valid = [isIngredientsExist, isPizzaNameExist];
       return !valid.every((field) => field);
+    },
+  },
+  watch: {
+    price() {
+      this.setFormPrice(this.price);
     },
   },
   created() {

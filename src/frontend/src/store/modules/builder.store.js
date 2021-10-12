@@ -7,7 +7,6 @@ import {
   SET_FORM_INGREDIENTS,
   SET_FORM_SIZES,
   SET_FORM_SAUCES,
-  SET_INGREDIENTS_PRICE,
   SET_FORM_PIZZA_NAME,
   SET_FORM_PRICE,
   SET_PIZZA_ID,
@@ -21,7 +20,6 @@ const initForm = () => ({
   sizes: {},
   ingredients: [],
   name: "",
-  ingredientsPrice: 0,
   count: 1,
   id: null,
 });
@@ -53,9 +51,6 @@ export default {
     },
     [SET_FORM_SAUCES](state, data) {
       state.form.sauces = data;
-    },
-    [SET_INGREDIENTS_PRICE](state, data) {
-      state.form.ingredientsPrice = data;
     },
     [SET_FORM_PIZZA_NAME](state, data) {
       state.form.name = data;
@@ -120,9 +115,6 @@ export default {
     setIngredients({ commit }, data) {
       commit(SET_PIZZA, { entity: "ingredients", data });
     },
-    setIngredientsPrice({ commit }, data) {
-      commit(SET_INGREDIENTS_PRICE, data);
-    },
     setSauces({ commit }, data) {
       commit(SET_PIZZA, { entity: "sauces", data });
     },
@@ -140,6 +132,25 @@ export default {
     },
     resetFormPizza({ commit }) {
       commit(RESET_FORM_PIZZA, initForm());
+    },
+  },
+  getters: {
+    price(state) {
+      let ingredientsPrice = 0;
+      if (state.form.ingredients.length) {
+        let total = 0;
+        state.form.ingredients.forEach((ingredient) => {
+          total = total + ingredient.price * ingredient.count;
+
+          ingredientsPrice = total;
+        });
+      }
+
+      const price =
+        (state.form.dough.price + state.form.sauces.price + ingredientsPrice) *
+        state.form.sizes.multiplier;
+
+      return price;
     },
   },
 };
