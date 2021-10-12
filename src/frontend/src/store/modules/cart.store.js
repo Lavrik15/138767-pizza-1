@@ -4,6 +4,7 @@ import {
   ADD_GOODS_TO_CART,
   INCREASE_COUNT_PIZZA,
   DECREASE_COUNT_PIZZA,
+  DELETE_PIZZA,
   UPDATE_CART_GOODS,
   GET_MISC,
   SET_MISC,
@@ -19,63 +20,7 @@ import {
 export default {
   namespaced: true,
   state: {
-    cart: [
-      // {
-      //   dough: {
-      //     name: "Тонкое",
-      //     image: "/public/img/dough-light.svg",
-      //     description: "Из твердых сортов пшеницы",
-      //     price: 300,
-      //     doughType: 0,
-      //   },
-      //   sauces: {
-      //     name: "Томатный",
-      //     price: 50,
-      //     sauceType: 0,
-      //   },
-      //   sizes: {
-      //     name: "32 см",
-      //     image: "/public/img/diameter.svg",
-      //     multiplier: 2,
-      //     pizzaSize: 2,
-      //   },
-      //   ingredients: [
-      //     {
-      //       name: "Ветчина",
-      //       image: "/public/img/filling/ham.svg",
-      //       price: 42,
-      //       count: 3,
-      //       ingredientType: "ham",
-      //     },
-      //     {
-      //       name: "Лук",
-      //       image: "/public/img/filling/onion.svg",
-      //       price: 21,
-      //       count: 1,
-      //       ingredientType: "onion",
-      //     },
-      //     {
-      //       name: "Бекон",
-      //       image: "/public/img/filling/bacon.svg",
-      //       price: 42,
-      //       count: 1,
-      //       ingredientType: "bacon",
-      //     },
-      //     {
-      //       name: "Чеддер",
-      //       image: "/public/img/filling/cheddar.svg",
-      //       price: 42,
-      //       count: 1,
-      //       ingredientType: "cheddar",
-      //     },
-      //   ],
-      //   name: "test",
-      //   ingredientsPrice: 231,
-      //   count: 1,
-      //   price: 1162,
-      //   id: "92e15a54-1c34-471a-ad16-8ef8a8c17da0",
-      // },
-    ],
+    cart: [],
     misc: [],
     delivery: delivery.self,
     phoneNumber: null,
@@ -163,6 +108,9 @@ export default {
     [SET_FLAT_NUMBER](state, data) {
       state.flat = data;
     },
+    [DELETE_PIZZA](state, id) {
+      state.cart = state.cart.filter((item) => item.id !== id);
+    },
   },
   actions: {
     addGoodsToCart({ commit }, data) {
@@ -204,6 +152,9 @@ export default {
     },
     setFlatNumber({ commit }, data) {
       commit(SET_FLAT_NUMBER, data);
+    },
+    deletePizza({ commit }, id) {
+      commit(DELETE_PIZZA, id);
     },
   },
 };

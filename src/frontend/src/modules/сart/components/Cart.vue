@@ -276,6 +276,7 @@ export default {
     ...mapActions("Cart", [
       "increasePizzaCount",
       "decreasePizzaCount",
+      "deletePizza",
       "getMisc",
       "setMisc",
       "increaseMiscCount",
@@ -294,7 +295,9 @@ export default {
       this.increasePizzaCount(id);
     },
     decreaseCount(order) {
-      if (order.count <= 0) return;
+      if (order.count <= 1) {
+        this.deletePizza(order.id);
+      }
       this.decreasePizzaCount(order.id);
     },
     increaseMisc(id) {
