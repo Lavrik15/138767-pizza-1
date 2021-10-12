@@ -34,6 +34,7 @@
         class="button"
         @click="onReadyBtnClick"
         :class="{ 'button--disabled': isReadyBtnDisabled }"
+        :disabled="isReadyBtnDisabled"
       >
         Готовьте!
       </button>
