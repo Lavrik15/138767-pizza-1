@@ -1,5 +1,10 @@
 import pizza from "@/static/pizza.json";
 import {
+  normalizeSauce,
+  normalizeSizes,
+  ingredientNormalize,
+} from "@/common/helpers";
+import {
   SET_PIZZA,
   SET_FORM_DOUGH,
   ADD_FORM_INGREDIENTS,
@@ -13,6 +18,7 @@ import {
   UPDATE_FORM_PIZZA,
   RESET_FORM_PIZZA,
 } from "@/store/mutations-type";
+import {normalizeDough} from "../../common/helpers";
 
 const initForm = () => ({
   dough: {},
@@ -70,7 +76,11 @@ export default {
   },
   actions: {
     getPizza({ commit }) {
-      const data = pizza;
+      const data = pizza; // api call
+      data.ingredients = data.ingredients.map(ingredientNormalize);
+      data.sauces = normalizeSauce(data.sauces);
+      data.sizes = data.sizes.map(normalizeSizes());
+      data.dough = normalizeDough(data.dough);
 
       commit(SET_PIZZA, { entity: "dough", data: data.dough });
       commit(SET_PIZZA, { entity: "ingredients", data: data.ingredients });

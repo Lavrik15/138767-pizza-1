@@ -46,8 +46,7 @@ import BuilderIngredientsSelector from "@/modules/builder/components/BuilderIngr
 import BuilderPizzaView from "@/modules/builder/components/BuilderPizzaView";
 
 import {
-  doughType,
-  sauceType,
+
   pizzaSize,
   ingredientsMaxLimit,
 } from "@/common/constants";
@@ -80,96 +79,9 @@ export default {
   },
   created() {
     this.getPizza();
-    const ingredients = this.pizza.ingredients.map((item) => {
-      const ingredient = { ...item };
-      // пусть для начала будет 0 ингридиентов каждого типа
-      ingredient.count = 0;
-
-      switch (item.name) {
-        case "Грибы":
-          ingredient.ingredientType = "mushrooms";
-          break;
-        case "Чеддер":
-          ingredient.ingredientType = "cheddar";
-          break;
-        case "Салями":
-          ingredient.ingredientType = "salami";
-          break;
-        case "Ветчина":
-          ingredient.ingredientType = "ham";
-          break;
-        case "Ананас":
-          ingredient.ingredientType = "ananas";
-          break;
-        case "Бекон":
-          ingredient.ingredientType = "bacon";
-          break;
-        case "Лук":
-          ingredient.ingredientType = "onion";
-          break;
-        case "Чили":
-          ingredient.ingredientType = "chile";
-          break;
-        case "Халапеньо":
-          ingredient.ingredientType = "jalapeno";
-          break;
-        case "Маслины":
-          ingredient.ingredientType = "olives";
-          break;
-        case "Томаты":
-          ingredient.ingredientType = "tomatoes";
-          break;
-        case "Лосось":
-          ingredient.ingredientType = "salmon";
-          break;
-        case "Моцарелла":
-          ingredient.ingredientType = "mozzarella";
-          break;
-        case "Пармезан":
-          ingredient.ingredientType = "parmesan";
-          break;
-        case "Блю чиз":
-          ingredient.ingredientType = "blue_cheese";
-          break;
-      }
-
-      return ingredient;
-    });
-    this.setIngredients(ingredients);
-
-    const dough = this.pizza.dough;
-    dough[0].doughType = doughType.small;
-    dough[1].doughType = doughType.big;
-    this.setDough(dough);
-    this.setFormDough(dough[0]);
-
-    const sauces = this.pizza.sauces;
-    sauces[0].sauceType = sauceType.tomato;
-    sauces[1].sauceType = sauceType.creamy;
-    this.setSauces(sauces);
-    this.setFormSauces(sauces[0]);
-
-    const sizes = this.pizza.sizes.map((size) => {
-      switch (size.multiplier) {
-        case 1:
-          return {
-            ...size,
-            pizzaSize: pizzaSize.small,
-          };
-        case 2:
-          return {
-            ...size,
-            pizzaSize: pizzaSize.normal,
-          };
-        case 3:
-          return {
-            ...size,
-            pizzaSize: pizzaSize.big,
-          };
-      }
-    });
-    this.setSizes(sizes);
-    this.setFormSizes(sizes[1]);
+    this.setFormDough(this.pizza.dough[0]);
+    this.setFormSauces(this.pizza.sauces[0]);
+    this.setFormSizes(this.pizza.sizes[1]);
   },
   methods: {
     ...mapActions("Builder", [
@@ -182,7 +94,6 @@ export default {
       "setDough",
       "setSizes",
       "setSauces",
-      "setIngredients",
       "getPizza",
       "setFormPizzaName",
       "setFormPrice",
