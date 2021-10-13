@@ -44,12 +44,7 @@ import BuilderDoughSelector from "@/modules/builder/components/BuilderDoughSelec
 import BuilderSizeSelector from "@/modules/builder/components/BuilderSizeSelector";
 import BuilderIngredientsSelector from "@/modules/builder/components/BuilderIngredientsSelector";
 import BuilderPizzaView from "@/modules/builder/components/BuilderPizzaView";
-
-import {
-
-  pizzaSize,
-  ingredientsMaxLimit,
-} from "@/common/constants";
+import { ingredientsMaxLimit } from "@/common/constants";
 
 export default {
   name: "Builder",
@@ -70,11 +65,6 @@ export default {
       const isPizzaNameExist = this.form.name.trim() !== "";
       const valid = [isIngredientsExist, isPizzaNameExist];
       return !valid.every((field) => field);
-    },
-  },
-  watch: {
-    price() {
-      this.setFormPrice(this.price);
     },
   },
   created() {
@@ -150,7 +140,8 @@ export default {
         this.$router.push("/cart");
         return;
       }
-      this.addGoodsToCart(this.form);
+      this.setFormPrice();
+      this.addGoodsToCart();
       this.setPizzaId(createUUIDv4());
       this.$router.push("/cart");
     },

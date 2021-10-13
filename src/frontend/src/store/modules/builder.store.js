@@ -18,7 +18,7 @@ import {
   UPDATE_FORM_PIZZA,
   RESET_FORM_PIZZA,
 } from "@/store/mutations-type";
-import {normalizeDough} from "../../common/helpers";
+import { normalizeDough } from "../../common/helpers";
 
 const initForm = () => ({
   dough: {},
@@ -79,7 +79,7 @@ export default {
       const data = pizza; // api call
       data.ingredients = data.ingredients.map(ingredientNormalize);
       data.sauces = normalizeSauce(data.sauces);
-      data.sizes = data.sizes.map(normalizeSizes());
+      data.sizes = data.sizes.map(normalizeSizes);
       data.dough = normalizeDough(data.dough);
 
       commit(SET_PIZZA, { entity: "dough", data: data.dough });
@@ -131,8 +131,8 @@ export default {
     setFormPizzaName({ commit }, data) {
       commit(SET_FORM_PIZZA_NAME, data);
     },
-    setFormPrice({ commit }, data) {
-      commit(SET_FORM_PRICE, data);
+    setFormPrice({ commit, getters }) {
+      commit(SET_FORM_PRICE, getters.price);
     },
     setPizzaId({ commit }, data) {
       commit(SET_PIZZA_ID, data);

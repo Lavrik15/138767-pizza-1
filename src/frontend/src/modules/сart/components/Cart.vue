@@ -222,7 +222,6 @@
 </template>
 
 <script>
-import { createUUIDv4 } from "@/common/helpers";
 import { delivery } from "@/common/constants";
 import { mapState, mapActions } from "vuex";
 import Popup from "@/common/components/Popup";
@@ -250,6 +249,7 @@ export default {
           return previousPrice + 0;
         }
       };
+
       const cartTotalPrice = this.cart.length && this.cart.reduce(calcPrice, 0);
       const miscTotalPrice = this.misc.length && this.misc.reduce(calcPrice, 0);
 
@@ -258,12 +258,6 @@ export default {
   },
   created() {
     this.getMisc();
-    const misc = this.misc.map((item) => {
-      item.count = 0;
-      item.id = createUUIDv4();
-      return item;
-    });
-    this.setMisc(misc);
   },
   data() {
     this.DELIVERY = delivery;

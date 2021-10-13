@@ -1,4 +1,5 @@
 import { delivery } from "@/common/constants";
+import { normalizeMisc } from "@/common/helpers";
 import misc from "@/static/misc.json";
 import {
   ADD_GOODS_TO_CART,
@@ -113,8 +114,8 @@ export default {
     },
   },
   actions: {
-    addGoodsToCart({ commit }, data) {
-      commit(ADD_GOODS_TO_CART, data);
+    addGoodsToCart({ commit, rootState }) {
+      commit(ADD_GOODS_TO_CART, rootState.Builder.form);
     },
     increasePizzaCount({ commit }, data) {
       commit(INCREASE_COUNT_PIZZA, data);
@@ -126,7 +127,7 @@ export default {
       commit(UPDATE_CART_GOODS, data);
     },
     getMisc({ commit }) {
-      const items = misc;
+      const items = misc.map(normalizeMisc);
       commit(GET_MISC, items);
     },
     setMisc({ commit }, data) {

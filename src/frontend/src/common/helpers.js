@@ -98,4 +98,10 @@ export const normalizeSizes = (item) => {
         pizzaSize: pizzaSize.big,
       };
   }
-}
+};
+
+export const normalizeMisc = (item) => {
+  item.count = 0;
+  item.id = createUUIDv4();
+  return item;
+};
