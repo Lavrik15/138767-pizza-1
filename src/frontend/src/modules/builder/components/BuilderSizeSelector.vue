@@ -12,11 +12,11 @@
         >
           <input
             v-model="pizzaSize"
+            :value="size.multiplier"
             type="radio"
             name="diameter"
-            :value="size.multiplier"
-            @change="pizzaSizeChangeHandler(size)"
             class="visually-hidden"
+            @change="pizzaSizeChangeHandler(size)"
           />
           <span>{{ size.name }}</span>
         </label>
@@ -38,7 +38,7 @@ export default {
   },
   data() {
     return {
-      pizzaSize: pizzaSize.small,
+      pizzaSize: pizzaSize.normal,
     };
   },
   methods: {

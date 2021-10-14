@@ -5,28 +5,32 @@
 
       <BuilderDoughSelector
         :dough="pizza.dough"
-        @doughTypeChange="dough = $event"
+        @doughTypeChange="doughTypeChange"
       />
 
       <BuilderSizeSelector
-        @pizzaSizeChange="size = $event"
         :sizes="pizza.sizes"
+        @pizzaSizeChange="pizzaSizeChange"
       />
 
       <BuilderIngredientsSelector
         :sauces="pizza.sauces"
         :ingredients="pizza.ingredients"
-        :selected="ingredients"
-        @sauceTypeChange="sauce = $event"
+        :selected="form.ingredients"
+        @sauceTypeChange="sauceTypeChange"
         @ingredientChange="ingredientChangeHandler"
       ></BuilderIngredientsSelector>
 
       <BuilderPizzaView
         :price="price"
-        :dough="dough"
-        :sauce="sauce"
-        :ingredients="ingredients"
+        :dough="form.dough"
+        :sauces="form.sauces"
+        :ingredients="form.ingredients"
+        :isReadyBtnDisabled="isReadyBtnDisabled"
+        :pizzaName="form.name"
         @dropIngredient="dropIngredientHandler"
+        @pizzaNameInput="pizzaNameInputHandler"
+        @readyBtnClick="onReadyBtnClick"
       >
       </BuilderPizzaView>
     </div>
@@ -34,17 +38,13 @@
 </template>
 
 <script>
+import { mapState, mapActions, mapGetters } from "vuex";
+import { createUUIDv4 } from "@/common/helpers";
 import BuilderDoughSelector from "@/modules/builder/components/BuilderDoughSelector";
 import BuilderSizeSelector from "@/modules/builder/components/BuilderSizeSelector";
 import BuilderIngredientsSelector from "@/modules/builder/components/BuilderIngredientsSelector";
 import BuilderPizzaView from "@/modules/builder/components/BuilderPizzaView";
-import pizza from "@/static/pizza.json";
-import {
-  doughType,
-  sauceType,
-  pizzaSize,
-  ingredientsMaxLimit,
-} from "@/common/constants";
+import { ingredientsMaxLimit } from "@/common/constants";
 
 export default {
   name: "Builder",
@@ -54,124 +54,70 @@ export default {
     BuilderIngredientsSelector,
     BuilderPizzaView,
   },
-  data() {
-    return {
-      pizza: pizza,
-      dough: {},
-      sauce: {},
-      size: {},
-      ingredients: [],
-    };
-  },
   computed: {
-    price() {
-      let ingredientsPrice = 0;
-      if (this.ingredients.length) {
-        this.ingredients.forEach((ingredient) => {
-          ingredientsPrice += ingredient.price * ingredient.count;
-        });
-      }
-      return (
-        (this.dough.price + this.sauce.price + ingredientsPrice) *
-        this.size.multiplier
-      );
+    ...mapState("Builder", {
+      pizza: (state) => state.pizza,
+      form: (state) => state.form,
+    }),
+    ...mapGetters("Builder", ["price"]),
+    isReadyBtnDisabled() {
+      const isIngredientsExist = !!Object.values(this.form.ingredients).length;
+      const isPizzaNameExist = this.form.name.trim() !== "";
+      const valid = [isIngredientsExist, isPizzaNameExist];
+      return !valid.every((field) => field);
     },
   },
   created() {
-    this.pizza.ingredients = this.pizza.ingredients.map((item) => {
-      const ingredient = { ...item };
-      // пусть для начала будет 0 ингридиентов каждого типа
-      ingredient.count = 0;
-
-      switch (item.name) {
-        case "Грибы":
-          ingredient.ingredientType = "mushrooms";
-          break;
-        case "Чеддер":
-          ingredient.ingredientType = "cheddar";
-          break;
-        case "Салями":
-          ingredient.ingredientType = "salami";
-          break;
-        case "Ветчина":
-          ingredient.ingredientType = "ham";
-          break;
-        case "Ананас":
-          ingredient.ingredientType = "ananas";
-          break;
-        case "Бекон":
-          ingredient.ingredientType = "bacon";
-          break;
-        case "Лук":
-          ingredient.ingredientType = "onion";
-          break;
-        case "Чили":
-          ingredient.ingredientType = "chile";
-          break;
-        case "Халапеньо":
-          ingredient.ingredientType = "jalapeno";
-          break;
-        case "Маслины":
-          ingredient.ingredientType = "olives";
-          break;
-        case "Томаты":
-          ingredient.ingredientType = "tomatoes";
-          break;
-        case "Лосось":
-          ingredient.ingredientType = "salmon";
-          break;
-        case "Моцарелла":
-          ingredient.ingredientType = "mozzarella";
-          break;
-        case "Пармезан":
-          ingredient.ingredientType = "parmesan";
-          break;
-        case "Блю чиз":
-          ingredient.ingredientType = "blue_cheese";
-          break;
-      }
-
-      return ingredient;
-    });
-    // тонкое тесто по умолчанию
-    this.dough = this.pizza.dough[0];
-    this.dough.doughType = doughType.small;
-
-    // сливочный соус по умолчанию
-    this.sauce = this.pizza.sauces[0];
-    this.sauce.sauceType = sauceType.creamy;
-
-    // 23 см пицца по умолчанию
-    this.size = this.pizza.sizes[0];
-    this.size.pizzaSize = pizzaSize.small;
+    this.getPizza();
+    this.setFormDough(this.pizza.dough[0]);
+    this.setFormSauces(this.pizza.sauces[0]);
+    this.setFormSizes(this.pizza.sizes[1]);
   },
   methods: {
+    ...mapActions("Builder", [
+      "setFormDough",
+      "setFormSizes",
+      "setFormSauces",
+      "addFormIngredients",
+      "updateCountFormIngredients",
+      "setFormIngredients",
+      "setDough",
+      "setSizes",
+      "setSauces",
+      "getPizza",
+      "setFormPizzaName",
+      "setFormPrice",
+      "setPizzaId",
+    ]),
+    ...mapActions("Cart", ["addGoodsToCart", "updateCartGoods"]),
+    doughTypeChange(selectedDough) {
+      this.setFormDough(selectedDough);
+    },
+    pizzaSizeChange(sizeSelected) {
+      this.setFormSizes(sizeSelected);
+    },
+    sauceTypeChange(sauceSelected) {
+      this.setFormSauces(sauceSelected);
+    },
     ingredientChangeHandler(ingredient) {
       // Если еще ни один из топингов не добавлен, то создать массив и положить туда первый топинг
-      if (!this.ingredients.length) {
-        this.ingredients.push(ingredient);
-        return;
-      }
+      const isExist = this.form.ingredients.some(
+        (item) => item.ingredientType === ingredient.ingredientType
+      );
 
-      // увеличить или уменьщить кол-во у уже добавленного топинга
-      let flag = false;
-      this.ingredients.forEach((item) => {
-        if (item.ingredientType === ingredient.ingredientType) {
-          item.count = ingredient.count;
-          flag = true;
-        }
-      });
-
-      // если топинг еще не добавлялся, то добавить новый
-      if (!flag) {
-        this.ingredients.push(ingredient);
+      if (isExist) {
+        this.updateCountFormIngredients(ingredient);
+      } else {
+        this.addFormIngredients(ingredient);
       }
 
       // почистить массив от топигов с нулевым количеством
-      this.ingredients = this.ingredients.filter((item) => item.count !== 0);
+      this.setFormIngredients(
+        this.form.ingredients.filter((item) => item.count !== 0)
+      );
     },
     dropIngredientHandler(ingredient) {
-      const currentIngredient = this.ingredients.find(
+      const currentIngredient = this.form.ingredients.find(
         (item) => item.ingredientType === ingredient.ingredientType
       );
       if (currentIngredient && currentIngredient.count >= ingredientsMaxLimit)
@@ -184,6 +130,20 @@ export default {
             : 1,
       };
       this.ingredientChangeHandler(data);
+    },
+    pizzaNameInputHandler(name) {
+      this.setFormPizzaName(name);
+    },
+    onReadyBtnClick() {
+      if (this.form.id) {
+        this.updateCartGoods();
+        this.$router.push("/cart");
+        return;
+      }
+      this.setFormPrice();
+      this.addGoodsToCart();
+      this.setPizzaId(createUUIDv4());
+      this.$router.push("/cart");
     },
   },
 };

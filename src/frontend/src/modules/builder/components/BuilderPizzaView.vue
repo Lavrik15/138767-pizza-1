@@ -3,6 +3,8 @@
     <label class="input">
       <span class="visually-hidden">Название пиццы</span>
       <input
+        :value="pizzaName"
+        @input="pizzaNameInputHandler"
         type="text"
         name="pizza_name"
         placeholder="Введите название пиццы"
@@ -27,7 +29,13 @@
 
     <div class="content__result">
       <p>Итого: {{ price }} ₽</p>
-      <button type="button" class="button button--disabled" disabled>
+      <button
+        type="button"
+        class="button"
+        @click="onReadyBtnClick"
+        :class="{ 'button--disabled': isReadyBtnDisabled }"
+        :disabled="isReadyBtnDisabled"
+      >
         Готовьте!
       </button>
     </div>
@@ -40,6 +48,9 @@ import { doughType, sauceType } from "@/common/constants";
 
 export default {
   name: "BuilderPizzaView",
+  components: {
+    AppDrop,
+  },
   props: {
     price: {
       type: Number,
@@ -49,7 +60,7 @@ export default {
       type: Object,
       required: true,
     },
-    sauce: {
+    sauces: {
       type: Object,
       required: true,
     },
@@ -57,29 +68,37 @@ export default {
       type: Array,
       default: () => [],
     },
-  },
-  components: {
-    AppDrop,
+    isReadyBtnDisabled: {
+      type: Boolean,
+      default: false,
+    },
+    pizzaName: {
+      type: String,
+      default: "",
+    },
   },
   computed: {
     foundationClass() {
       return {
         "pizza--foundation--big-creamy":
           this.dough.doughType === doughType.big &&
-          this.sauce.sauceType === sauceType.creamy,
+          this.sauces.sauceType === sauceType.creamy,
         "pizza--foundation--big-tomato":
           this.dough.doughType === doughType.big &&
-          this.sauce.sauceType === sauceType.tomato,
+          this.sauces.sauceType === sauceType.tomato,
         "pizza--foundation--small-creamy":
           this.dough.doughType === doughType.small &&
-          this.sauce.sauceType === sauceType.creamy,
+          this.sauces.sauceType === sauceType.creamy,
         "pizza--foundation--small-tomato":
           this.dough.doughType === doughType.small &&
-          this.sauce.sauceType === sauceType.tomato,
+          this.sauces.sauceType === sauceType.tomato,
       };
     },
   },
   methods: {
+    pizzaNameInputHandler(event) {
+      this.$emit("pizzaNameInput", event.target.value);
+    },
     getPizzaClasses(ingredient) {
       return {
         ["pizza__filling--" + ingredient.ingredientType]:
@@ -90,6 +109,9 @@ export default {
     },
     pizzaDropHandler(ingredient) {
       this.$emit("dropIngredient", ingredient);
+    },
+    onReadyBtnClick() {
+      this.$emit("readyBtnClick");
     },
   },
 };

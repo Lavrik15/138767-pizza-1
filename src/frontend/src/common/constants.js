@@ -14,6 +14,12 @@ export const pizzaSize = {
   big: 3,
 };
 
+export const delivery = {
+  self: 0,
+  house: 1,
+  new: 2,
+};
+
 export const ingredientsMaxLimit = 3;
 export const move = "move";
 export const dataPayload = "payload";
