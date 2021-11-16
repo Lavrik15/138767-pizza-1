@@ -218,6 +218,9 @@
 <script>
 export default {
   name: "Orders",
+  async created() {
+    // const data = await this.$api.orders.query();
+  },
 };
 </script>
 

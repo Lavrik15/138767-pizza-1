@@ -1,4 +1,3 @@
-import pizza from "@/static/pizza.json";
 import {
   normalizeSauce,
   normalizeSizes,
@@ -23,7 +22,7 @@ import { normalizeDough } from "../../common/helpers";
 const initForm = () => ({
   dough: {},
   sauces: {},
-  sizes: {},
+  sizes: [],
   ingredients: [],
   name: "",
   count: 1,
@@ -75,17 +74,18 @@ export default {
     },
   },
   actions: {
-    getPizza({ commit }) {
-      const data = pizza; // api call
-      data.ingredients = data.ingredients.map(ingredientNormalize);
-      data.sauces = normalizeSauce(data.sauces);
-      data.sizes = data.sizes.map(normalizeSizes);
-      data.dough = normalizeDough(data.dough);
+    async getPizza({ commit }) {
+      const ingredients = (await this.$api.ingredients.get()).map(
+        ingredientNormalize
+      );
+      const sauces = normalizeSauce(await this.$api.sauces.get());
+      const sizes = (await this.$api.sizes.get()).map(normalizeSizes);
+      const dough = normalizeDough(await this.$api.dough.get());
 
-      commit(SET_PIZZA, { entity: "dough", data: data.dough });
-      commit(SET_PIZZA, { entity: "ingredients", data: data.ingredients });
-      commit(SET_PIZZA, { entity: "sizes", data: data.sizes });
-      commit(SET_PIZZA, { entity: "sauces", data: data.sauces });
+      commit(SET_PIZZA, { entity: "dough", data: dough });
+      commit(SET_PIZZA, { entity: "ingredients", data: ingredients });
+      commit(SET_PIZZA, { entity: "sizes", data: sizes });
+      commit(SET_PIZZA, { entity: "sauces", data: sauces });
     },
     setFormDough({ commit }, selectedDough) {
       commit(SET_FORM_DOUGH, selectedDough);

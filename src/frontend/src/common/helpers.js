@@ -1,4 +1,17 @@
 import { doughType, sauceType, pizzaSize } from "@/common/constants";
+import { resources } from "@/common/constants";
+import {
+  AuthApiService,
+  CrudApiService,
+  ReadOnlyApiService,
+} from "@/services/api.service";
+import { SET_AUTH } from "@/store/mutations-type";
+
+export const setAuth = (store) => {
+  store.$api.auth.setAuthHeader();
+  store.dispatch("getMe");
+  store.commit(SET_AUTH, true);
+};
 
 export const createUUIDv4 = () => {
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
@@ -105,3 +118,14 @@ export const normalizeMisc = (item) => {
   item.id = createUUIDv4();
   return item;
 };
+
+export const createResources = () => ({
+  [resources.ADDRESS]: new CrudApiService(resources.ADDRESS),
+  [resources.DOUGH]: new ReadOnlyApiService(resources.DOUGH),
+  [resources.INGREDIENTS]: new ReadOnlyApiService(resources.INGREDIENTS),
+  [resources.USER]: new AuthApiService(),
+  [resources.MISC]: new ReadOnlyApiService(resources.MISC),
+  [resources.SAUCES]: new ReadOnlyApiService(resources.SAUCES),
+  [resources.ORDER]: new CrudApiService(resources.ORDER),
+  [resources.SIZES]: new ReadOnlyApiService(resources.SIZES),
+});

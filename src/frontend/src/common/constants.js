@@ -20,6 +20,17 @@ export const delivery = {
   new: 2,
 };
 
+export const resources = {
+  ADDRESS: "address",
+  DOUGH: "dough",
+  INGREDIENTS: "ingredients",
+  MISC: "misc",
+  ORDER: "orders",
+  SAUCES: "sauces",
+  SIZES: "sizes",
+  USER: "user",
+};
+
 export const ingredientsMaxLimit = 3;
 export const move = "move";
 export const dataPayload = "payload";

@@ -67,8 +67,8 @@ export default {
       return !valid.every((field) => field);
     },
   },
-  created() {
-    this.getPizza();
+  async created() {
+    await this.getPizza();
     this.setFormDough(this.pizza.dough[0]);
     this.setFormSauces(this.pizza.sauces[0]);
     this.setFormSizes(this.pizza.sizes[1]);

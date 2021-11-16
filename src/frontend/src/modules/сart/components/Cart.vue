@@ -256,8 +256,8 @@ export default {
       return (cartTotalPrice || 0) + (miscTotalPrice || 0);
     },
   },
-  created() {
-    this.getMisc();
+  async created() {
+    await this.getMisc();
   },
   data() {
     this.DELIVERY = delivery;

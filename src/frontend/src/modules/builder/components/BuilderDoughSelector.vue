@@ -36,6 +36,7 @@ export default {
     dough: {
       type: Array,
       required: true,
+      default: () => [],
     },
   },
   data() {

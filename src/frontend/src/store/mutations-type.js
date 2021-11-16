@@ -29,3 +29,5 @@ export const SET_ADDRESS = "SET_ADDRESS";
 export const SET_HOUSE_NUMBER = "SET_HOUSE_NUMBER";
 export const SET_FLAT_NUMBER = "SET_FLAT_NUMBER";
 export const RESET_FORM_PIZZA = "RESET_FORM_PIZZA";
+export const SET_AUTH = "SET_AUTH";
+export const SET_USER = "SET_USER";

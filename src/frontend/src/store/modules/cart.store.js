@@ -1,6 +1,5 @@
 import { delivery } from "@/common/constants";
 import { normalizeMisc } from "@/common/helpers";
-import misc from "@/static/misc.json";
 import {
   ADD_GOODS_TO_CART,
   INCREASE_COUNT_PIZZA,
@@ -126,8 +125,9 @@ export default {
     updateCartGoods({ commit }, data) {
       commit(UPDATE_CART_GOODS, data);
     },
-    getMisc({ commit }) {
-      const items = misc.map(normalizeMisc);
+    async getMisc({ commit }) {
+      const data = await this.$api.misc.query();
+      const items = data.map(normalizeMisc);
       commit(GET_MISC, items);
     },
     setMisc({ commit }, data) {
